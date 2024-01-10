@@ -1,0 +1,30 @@
+---
+- name: Configure Nginx as Load Balancer
+  hosts: rocky_linux
+  become: true
+  tasks:
+    - name: Install Nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Remove default load-balancer.conf if exists
+      ansible.builtin.file:
+        path: /etc/nginx/conf.d/load-balancer.conf
+        state: absent
+      register: remove_default_config
+      ignore_errors: yes
+
+    - name: Configure Nginx as Load Balancer
+      ansible.builtin.copy:
+        src: files/load-balancer.conf
+        dest: /etc/nginx/conf.d/load-balancer.conf
+      notify:
+        - Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+

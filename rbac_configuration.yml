@@ -1,0 +1,33 @@
+---
+- name: RBAC Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set directory permissions
+      file:
+        path: /opt/sensitive
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+
+    - name: Allow 'newuser' access to the directory
+      file:
+        path: /opt/sensitive
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+      become: yes
+      become_user: newuser
+
+    - name: Add read and write permissions for 'newuser'
+      file:
+        path: /opt/sensitive
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+      become: yes
+      become_user: newuser
+

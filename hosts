@@ -1,0 +1,7 @@
+[lamp_servers]
+centos1 ansible_user=euromed ansible_host=192.168.100.51 ansible_ssh_private_key_file=/home/ansible/.ssh/centos1_key ansible_port=2222
+centos2 ansible_user=euromed ansible_host=192.168.100.53 ansible_ssh_private_key_file=/home/ansible/.ssh/centos2_key ansible_port=2222
+centos3 ansible_user=euromed ansible_host=192.168.100.52 ansible_ssh_private_key_file=/home/ansible/.ssh/centos3_key ansible_port=2222
+[rocky_linux]
+rocky1 ansible_user=euromed ansible_host=192.168.100.49 ansible_ssh_private_key_file=/home/ansible/.ssh/rockylinux_key ansible_port=2222
+

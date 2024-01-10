@@ -1,0 +1,40 @@
+---
+- name: Install and configure Apache + Deploy Custom index.html
+  hosts: lamp_servers
+  become: yes
+  tasks:
+    - name: Update package cache and upgrade packages
+      package:
+        name: '*'
+        state: latest
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install Apache
+      package:
+        name: httpd
+        state: present
+
+    - name: Start Apache and enable it on boot
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Remove default index.html
+      file:
+        path: /var/www/html/index.html
+        state: absent
+    - name: Copy custom index.html to web servers
+      copy:
+        src: "files/{{ inventory_hostname }}_index.html.j2"
+        dest: /var/www/html/
+      notify:
+        - Restart Apache
+
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: httpd
+        state: restarted
+

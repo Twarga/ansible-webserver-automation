@@ -1,0 +1,18 @@
+---
+- name: Scheduled YUM Updates
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update YUM cache
+      package:
+        name: '*'
+        update_cache: yes
+      when: ansible_pkg_mgr == 'yum'
+
+    - name: Schedule regular updates
+      cron:
+        name: Perform system updates
+        minute: "0"
+        hour: "4"
+        job: "yum -y update"
+

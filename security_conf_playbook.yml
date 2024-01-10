@@ -1,0 +1,73 @@
+- name: Full Security Configuration Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add EPEL repository
+      become: yes
+      command: yum install -y epel-release
+      ignore_errors: yes
+      when: ansible_distribution == 'CentOS'  # Only for CentOS systems
+
+    - name: Firewall Configuration
+      firewalld:
+        service: "{{ item }}"
+        state: enabled
+        permanent: yes
+        immediate: yes
+      loop:
+        - http
+        - https
+        - ssh
+
+    - name: User Permissions
+      user:
+        name: newuser
+        state: present
+        groups: users
+
+    - name: SSH Hardening
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+        state: present
+      notify: Restart SSH
+
+    - name: Change SSH Port
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^Port"
+        line: "Port 2222"
+        state: present
+      notify: Restart SSH
+
+    - name: Enforce SSH Key-based Authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication no"
+        state: present
+      notify: Restart SSH
+
+    - name: Install fail2ban
+      become: yes
+      yum:
+        name: fail2ban
+        state: present
+      when: ansible_distribution == 'CentOS'  # Only for CentOS systems
+
+    - name: Copy fail2ban configuration
+      copy:
+        src: files/jail.local  # Update the path if needed
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: '0644'
+      when: ansible_distribution == 'CentOS'  # Only for CentOS systems
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted
+
