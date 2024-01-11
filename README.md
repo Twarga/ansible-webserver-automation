@@ -1,7 +1,7 @@
 # Ansible Project
 
+![Project.drawio.png](project.drawio.png)
 
-![project.drawio.png](:/19a9bd7e6fb14c669938faee2dcb4023)
 
 
 
