@@ -1,6 +1,10 @@
 # Ansible Project
 
-[project.drawio.png]
+
+![project.drawio.png](:/19a9bd7e6fb14c669938faee2dcb4023)
+
+
+
 ## Description
 This project utilizes Ansible for advanced Linux/Unix administration tasks, focusing on automation and Infrastructure as Code (IaC). It includes playbooks for web server configuration, security, RBAC, and load balancing using Nginx.
 
